@@ -7,7 +7,7 @@
 #' @param sampleSize The size of a random set of genes which in turn has size = pathwaySize
 #' @param minSize Minimal size of a gene set to test. All pathways below the threshold are excluded.
 #' @param maxSize Maximal size of a gene set to test. All pathways above the threshold are excluded.
-#' @param eps This parameter sets the boundary for calculating the p value.
+#' @param eps_dd This parameter sets the boundary for calculating the p value.
 #' @param scoreType This parameter defines the GSEA score type. Possible options are ("std", "pos", "neg")
 #' @param nproc If not equal to zero sets BPPARAM to use nproc workers (default = 0).
 #' @param gseaParam GSEA parameter value, all gene-level statis are raised to the power of `gseaParam`
@@ -15,7 +15,7 @@
 #' @param BPPARAM Parallelization parameter used in bplapply.
 #'  Can be used to specify cluster to run. If not initialized explicitly or
 #'  by setting `nproc` default value `bpparam()` is used.
-#' @param absEps deprecated, use `eps` parameter instead
+#' @param abseps_dd deprecated, use `eps_dd` parameter instead
 #'@export
 #' @import fastmatch
 #' @import data.table
@@ -40,12 +40,12 @@ fgseaMultilevel <- function(pathways,
                             sampleSize = 101,
                             minSize    = 1,
                             maxSize    = Inf,
-                            eps        = 1e-10,
+                            eps_dd        = 1e-10,
                             scoreType  = c("std", "pos", "neg"),
                             nproc      = 0,
                             gseaParam  = 1,
                             BPPARAM    = NULL,
-                            absEps     = NULL)
+                            abseps_dd     = NULL)
 {
     scoreType <- match.arg(scoreType)
     pp <- preparePathwaysAndStats(pathways, stats, minSize, maxSize, gseaParam, scoreType)
@@ -67,12 +67,12 @@ fgseaMultilevel <- function(pathways,
 
 
 
-    # Warning message for deprecated absEps parameter
-    if (!is.null(absEps)){
-        warning("You are using deprecated argument `absEps`. ",
-                "Use `eps` argument instead. ",
-                "`absEps` was assigned to `eps`.")
-        eps <-  absEps
+    # Warning message for deprecated abseps_dd parameter
+    if (!is.null(abseps_dd)){
+        warning("You are using deprecated argument `abseps_dd`. ",
+                "Use `eps_dd` argument instead. ",
+                "`abseps_dd` was assigned to `eps_dd`.")
+        eps_dd <-  abseps_dd
     }
 
     # Warning message for to small value for sampleSize
@@ -89,7 +89,7 @@ fgseaMultilevel <- function(pathways,
 
     nPermSimple <- 1000 # number of samples for initial fgseaSimple run: fast and good enough
     minSize <- max(minSize, 1)
-    eps <- max(0, min(1, eps))
+    eps_dd <- max(0, min(1, eps_dd))
 
 
     if (sampleSize %% 2 == 0){
@@ -166,7 +166,7 @@ fgseaMultilevel <- function(pathways,
 
     sign <- if (scoreType %in% c("pos", "neg")) TRUE else FALSE
     cpp.res <- multilevelImpl(multilevelPathwaysList, stats,
-                              sampleSize, seed, eps, sign=sign,
+                              sampleSize, seed, eps_dd, sign=sign,
                               BPPARAM=BPPARAM)
     cpp.res <- rbindlist(cpp.res)
 
@@ -186,13 +186,13 @@ fgseaMultilevel <- function(pathways,
     result <- rbindlist(list(result, dtSimpleFgsea, unbalanced), use.names = TRUE)
     result[, nMoreExtreme := NULL]
 
-    result[pval < eps, c("pval", "log2err") := list(eps, NA)]
+    result[pval < eps_dd, c("pval", "log2err") := list(eps_dd, NA)]
     result[, padj := p.adjust(pval, method = "BH")]
 
-    if (nrow(result[pval==eps & is.na(log2err)])){
+    if (nrow(result[pval==eps_dd & is.na(log2err)])){
         warning("For some pathways, in reality P-values are less than ",
-                paste(eps),
-                ". You can set the `eps` argument to zero for better estimation.")
+                paste(eps_dd),
+                ". You can set the `eps_dd` argument to zero for better estimation.")
     }
 
     setcolorder(result, c("pathway", "pval", "padj", "log2err",
@@ -221,7 +221,7 @@ multilevelError <- function(pval, sampleSize){
 #' @param stats Named vector of gene-level stats. Names should be the same as in 'pathways'
 #' @param sampleSize The size of a random set of genes which in turn has size = pathwaySize
 #' @param seed `seed` parameter from `fgseaMultilevel`
-#' @param eps This parameter sets the boundary for calculating the p value.
+#' @param eps_dd This parameter sets the boundary for calculating the p value.
 #' @param sign This option will be used in future implementations.
 #' @param BPPARAM Parallelization parameter used in bplapply.
 #'  Can be used to specify cluster to run. If not initialized explicitly or
@@ -231,14 +231,14 @@ multilevelImpl <- function(multilevelPathwaysList,
                            stats,
                            sampleSize,
                            seed,
-                           eps,
+                           eps_dd,
                            sign=FALSE,
                            BPPARAM=NULL){
     #To avoid warnings during the check
     size=ES=NULL
     res <- bplapply(multilevelPathwaysList,
                       function(x) fgseaMultilevelCpp(x[, ES], stats, unique(x[, size]),
-                                                     sampleSize, seed, eps, sign),
+                                                     sampleSize, seed, eps_dd, sign),
                       BPPARAM=BPPARAM)
     return(res)
 }

@@ -32,7 +32,7 @@ int main() {
     cout << "Current request: " << test_id + 1 << "/" << test_count;
     cout << ". (Pathway Size: " << k << ", ES: " << gsea << ")" << endl;
     double ans = 0.0;
-    double eps = 1e-40;
+    double eps_dd = 1e-40;
     double total_removed = 0.0;
     if (memo.find(make_pair(k, gsea)) != memo.end()) {
       ans = memo[make_pair(k, gsea)].first;
@@ -70,11 +70,11 @@ int main() {
             }
             double p_take = (k - j) * 1.0 / (n - i);
             for (int s = 0; s < (int) dp[j].size(); s++) {
-              while (!dp[j][s].empty() && dp[j][s].back() < eps) {
+              while (!dp[j][s].empty() && dp[j][s].back() < eps_dd) {
                 total_removed += dp[j][s].back();
                 dp[j][s].pop_back();
               }
-              while (!dp[j][s].empty() && dp[j][s][0] < eps) {
+              while (!dp[j][s].empty() && dp[j][s][0] < eps_dd) {
                 total_removed += dp[j][s][0];
                 dp[j][s].erase(dp[j][s].begin());
                 dp_from[j][s]++;

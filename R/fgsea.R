@@ -125,7 +125,7 @@ calcGseaStat <- function(stats,
     NR <- (sum(abs(r[S])^p))
     rAdj <- abs(r[S])^p
     if (NR == 0) {
-        # this is equivalent to rAdj being rep(eps, m)
+        # this is equivalent to rAdj being rep(eps_dd, m)
         rCumSum <- seq_along(rAdj) / length(rAdj)
     } else {
         rCumSum <- cumsum(rAdj) / NR
@@ -134,7 +134,7 @@ calcGseaStat <- function(stats,
 
     tops <- rCumSum - (S - seq_along(S)) / (N - m)
     if (NR == 0) {
-        # this is equivalent to rAdj being rep(eps, m)
+        # this is equivalent to rAdj being rep(eps_dd, m)
         bottoms <- tops - 1 / m
     } else {
         bottoms <- tops - rAdj / NR

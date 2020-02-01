@@ -176,6 +176,6 @@ test_that("fgseaSimple and fgseaMultilevel properly handle duplicated in gene se
     fr1 <- fgseaSimple(pathways, exampleRanks, nperm=1000)
     expect_equal(fr1$size[1], fr1$size[2])
 
-    fr2 <- suppressWarnings(fgseaMultilevel(pathways, exampleRanks, eps = 1e-4))
+    fr2 <- suppressWarnings(fgseaMultilevel(pathways, exampleRanks, eps_dd = 1e-4))
     expect_equal(fr2$size[1], fr2$size[2])
 })

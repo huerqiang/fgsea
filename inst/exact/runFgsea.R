@@ -42,7 +42,7 @@ sampleSize <- 1001
 multilevelPvals <- unlist(bplapply(inpData, function(x) fgsea:::fgseaMultilevelCpp(enrichmentScores = x$ES,ranks = ranks,
                                                                             pathwaySize = x$size, sampleSize = sampleSize,
                                                                             seed = x$seed,
-                                                                            eps = 0.0,
+                                                                            eps_dd = 0.0,
                                                                             sign = TRUE)))
 
 write.table(multilevelPvals,

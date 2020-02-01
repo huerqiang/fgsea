@@ -8,5 +8,5 @@ using namespace Rcpp;
 DataFrame fgseaMultilevelCpp(const NumericVector& enrichmentScores,
                                  const NumericVector& ranks, int pathwaySize,
                                  int sampleSize, int seed,
-                                 double eps, bool sign);
+                                 double eps_dd, bool sign);
 

@@ -12,7 +12,7 @@ using namespace Rcpp;
 
 using namespace std;
 
-const double eps = 1e-13;
+const double eps_dd = 1e-13;
 
 template <class T>
 class SegmentTree {
@@ -163,23 +163,23 @@ NumericVector gseaStats1(
         blockSummit[block] = blockEnd[block];
     }
 
-    double statEps = 1e-5;
+    double stateps_dd = 1e-5;
 
     for (int i = 0; i < k; ++i) {
         int t = selectedStats[i] - 1;
         double xx = abs(stats[t]);
         if (xx > 0) {
-            statEps = min(xx, statEps);
+            stateps_dd = min(xx, stateps_dd);
         }
     }
-    statEps /= 1024;
+    stateps_dd /= 1024;
 
     for (int i = 0; i < k; ++i) {
         int t = selectedStats[i] - 1;
         int tRank = selectedRanks[i];
         // cout << tRank << ":\n";
-        // 0 values make problems, replacing with epsilon
-        double adjStat = pow(max(abs(stats[t]), statEps), gseaParam);
+        // 0 values make problems, replacing with eps_ddilon
+        double adjStat = pow(max(abs(stats[t]), stateps_dd), gseaParam);
 
         xs.inc(tRank, -1);
         ys.inc(tRank, adjStat);
@@ -214,7 +214,7 @@ NumericVector gseaStats1(
 
 
                 double pr = (xb - xa) * (yc - yb) - (yb - ya) * (xc - xb);
-                if (yc - ya < eps) {
+                if (yc - ya < eps_dd) {
                     pr = 0;
                 }
                 if (pr <= 0) {

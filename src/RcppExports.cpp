@@ -50,8 +50,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // fgseaMultilevelCpp
-DataFrame fgseaMultilevelCpp(const NumericVector& enrichmentScores, const NumericVector& ranks, int pathwaySize, int sampleSize, int seed, double eps, bool sign);
-RcppExport SEXP _fgsea_fgseaMultilevelCpp(SEXP enrichmentScoresSEXP, SEXP ranksSEXP, SEXP pathwaySizeSEXP, SEXP sampleSizeSEXP, SEXP seedSEXP, SEXP epsSEXP, SEXP signSEXP) {
+DataFrame fgseaMultilevelCpp(const NumericVector& enrichmentScores, const NumericVector& ranks, int pathwaySize, int sampleSize, int seed, double eps_dd, bool sign);
+RcppExport SEXP _fgsea_fgseaMultilevelCpp(SEXP enrichmentScoresSEXP, SEXP ranksSEXP, SEXP pathwaySizeSEXP, SEXP sampleSizeSEXP, SEXP seedSEXP, SEXP eps_ddSEXP, SEXP signSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -60,9 +60,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type pathwaySize(pathwaySizeSEXP);
     Rcpp::traits::input_parameter< int >::type sampleSize(sampleSizeSEXP);
     Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
-    Rcpp::traits::input_parameter< double >::type eps(epsSEXP);
+    Rcpp::traits::input_parameter< double >::type eps_dd(eps_ddSEXP);
     Rcpp::traits::input_parameter< bool >::type sign(signSEXP);
-    rcpp_result_gen = Rcpp::wrap(fgseaMultilevelCpp(enrichmentScores, ranks, pathwaySize, sampleSize, seed, eps, sign));
+    rcpp_result_gen = Rcpp::wrap(fgseaMultilevelCpp(enrichmentScores, ranks, pathwaySize, sampleSize, seed, eps_dd, sign));
     return rcpp_result_gen;
 END_RCPP
 }

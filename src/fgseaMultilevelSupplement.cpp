@@ -81,7 +81,7 @@ void EsRuler::duplicateSamples() {
     swap(currentSamples, new_sets);
 }
 
-void EsRuler::extend(double ES, int seed, double eps) {
+void EsRuler::extend(double ES, int seed, double eps_dd) {
     unsigned int posCount = 0;
     unsigned int totalCount = 0;
     mt19937 gen(seed);
@@ -110,9 +110,9 @@ void EsRuler::extend(double ES, int seed, double eps) {
             }
         }
         duplicateSamples();
-        if (eps != 0){
+        if (eps_dd != 0){
             unsigned long k = enrichmentScores.size() / ((sampleSize + 1) / 2);
-            if (k > - log2(0.5 * eps * exp(betaMeanLog(posUnifScoreCount.first, posUnifScoreCount.second)))) {
+            if (k > - log2(0.5 * eps_dd * exp(betaMeanLog(posUnifScoreCount.first, posUnifScoreCount.second)))) {
                 break;
             }
         }
@@ -120,7 +120,7 @@ void EsRuler::extend(double ES, int seed, double eps) {
 }
 
 
-pair<double, bool> EsRuler::getPvalue(double ES, double eps, bool sign) {
+pair<double, bool> EsRuler::getPvalue(double ES, double eps_dd, bool sign) {
     unsigned long halfSize = (sampleSize + 1) / 2;
 
     auto it = enrichmentScores.begin();
