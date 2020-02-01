@@ -10,12 +10,12 @@ fgseaMultilevel(
   sampleSize = 101,
   minSize = 1,
   maxSize = Inf,
-  eps = 1e-10,
+  eps_dd = 1e-10,
   scoreType = c("std", "pos", "neg"),
   nproc = 0,
   gseaParam = 1,
   BPPARAM = NULL,
-  absEps = NULL
+  abseps_dd = NULL
 )
 }
 \arguments{
@@ -29,7 +29,7 @@ fgseaMultilevel(
 
 \item{maxSize}{Maximal size of a gene set to test. All pathways above the threshold are excluded.}
 
-\item{eps}{This parameter sets the boundary for calculating the p value.}
+\item{eps_dd}{This parameter sets the boundary for calculating the p value.}
 
 \item{scoreType}{This parameter defines the GSEA score type. Possible options are ("std", "pos", "neg")}
 
@@ -42,7 +42,7 @@ before calculation of GSEA enrichment scores.}
 Can be used to specify cluster to run. If not initialized explicitly or
 by setting `nproc` default value `bpparam()` is used.}
 
-\item{absEps}{deprecated, use `eps` parameter instead}
+\item{abseps_dd}{deprecated, use `eps_dd` parameter instead}
 }
 \value{
 A table with GSEA results. Each row corresponds to a tested pathway. The columns are the following
